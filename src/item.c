@@ -24,6 +24,11 @@ uint8_t initialize_item(Item *item)
 
     item->points = malloc(sizeof(V2) * item->point_amount);
     if (item->points == NULL) return 1;
+
+    for (int i = 0; i < item->point_amount; ++i){
+        item->points[i] = (V2) { 0 };
+    }
+
     return 0;
 }
 

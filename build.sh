@@ -10,6 +10,6 @@ FILES="./src/drawfuncs.c
        ./src/v2.c
        ./src/wall.c"
 
-gcc $FILES -lraylib -lm ./src/main.c -o snakegame
-gcc $FILES -lraylib -lm ./src/editor.c -o editor
+gcc $FILES -lraylib -lm -g ./src/main.c -o snakegame
+gcc $FILES -lraylib -lm -g ./src/editor.c -o editor
 

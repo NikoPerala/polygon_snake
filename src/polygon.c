@@ -35,34 +35,6 @@ int line_line_intersection(V2 lp1, V2 lp2, V2 lp3, V2 lp4, V2 *pt)
 
     return 1;
 }
-/*
-int line_line_intersection(V2 lp1, V2 lp2, V2 lp3, V2 lp4, V2 *pt)
-{
-    float x1 = lp1.x;
-    float y1 = lp1.y;
-    float x2 = lp2.x;
-    float y2 = lp2.y;
-    float x3 = lp3.x;
-    float y3 = lp3.y;
-    float x4 = lp4.x;
-    float y4 = lp4.y;
-
-    float num_t =  ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4));
-    float num_u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3));
-    float den   =  ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
-
-    if (!(signage_is_same(num_t, den) && signage_is_same(num_u, den))) return 0;
-    if ((den < num_t) && (den < num_u)) return 0;
-
-    float t = num_t / den;
-    //float u = num_u / den;
-
-    pt->x = x1 + t * (x2 - x1);
-    pt->y = y1 + t * (y2 - y1);
-    
-    return 1;
-}
-*/
 
 void fill_polygon(V2 *points, int point_amount, uint32_t color) {
     if (point_amount < 3) {

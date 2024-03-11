@@ -9,12 +9,6 @@
 
 #include "snakegame.h"
 
-int 
-collision(V2 p1, V2 p2)
-{
-    return (ITEM_RADIUS + SNAKE_RADIUS >= V2_distance(p1, p2));
-}
-
 int main(int argc, char *argv[]){
    
     srand(time(NULL));
@@ -31,10 +25,10 @@ int main(int argc, char *argv[]){
     
     printf("Created level with %d walls.\n", level.wall_amount);
 
-    Snake snake;
+    Snake snake = { 0 };
     init_snake(&snake);
     
-    Item food;
+    Item food = { 0 };
     food.type = ITEM_APPLE;
     initialize_item(&food);
     food.position = V2_random(0, W_WIDTH, 0, W_HEIGHT);
@@ -60,7 +54,7 @@ int main(int argc, char *argv[]){
 
         if (check_collision_polygon(snake.headpoints, 4, food.points, food.point_amount)){
             food.position = V2_random(0, W_WIDTH, 0, W_HEIGHT);
-            snake_eat(&snake);
+            if (snake_eat(&snake)) break;
             score++;
             printf("Food eaten\n");
         }
@@ -100,6 +94,8 @@ int main(int argc, char *argv[]){
 
         EndDrawing();
     }
+
+    CloseWindow();
 
     free_level(&level);
     free_item(&food);

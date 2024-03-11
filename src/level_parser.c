@@ -53,7 +53,14 @@ uint8_t process_line(char *line, Level *level)
             break;
         case 'W':
             level->wall_amount = (atoi(line + 1));
+            
             level->walls = malloc(sizeof(Wall) * level->wall_amount);
+            if (level->walls == NULL) return 1;
+
+            for (int i = 0; i < level->wall_amount; ++i){
+                level->walls[i] = (Wall) { 0 };
+            }
+
             level->loading_status |= (1 << GOT_WALL_AMOUNT);
             break;
         case 'N':

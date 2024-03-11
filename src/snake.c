@@ -17,6 +17,7 @@ void init_snake(Snake *snake)
 
     snake->members = malloc(sizeof(SnakeMember) * snake->capacity);
     for (int i = 0; i < SNAKE_START_LENGTH; ++i){
+        snake->members[i] = (SnakeMember) { 0 };
         snake->members[i].position = SNAKE_START_POINT;
         snake->members[i].wing1 = SNAKE_START_POINT;
         snake->members[i].wing2 = SNAKE_START_POINT;
@@ -143,7 +144,7 @@ void snake_display(Snake *snake)
     }
 }
 
-void snake_eat(Snake *snake)
+uint8_t snake_eat(Snake *snake)
 {
     int tmp = snake->length;
     snake->speed += 0.1;
@@ -152,8 +153,11 @@ void snake_eat(Snake *snake)
     if (snake->length >= snake->capacity){
         snake->capacity *= 2;
         snake->members = realloc(snake->members, sizeof(SnakeMember) * snake->capacity);
+        if (snake->members == NULL) return 1;
     }
     for (tmp; tmp <= snake->length; ++tmp){
         snake->members[tmp] = snake->members[tmp - 1];
     }
+
+    return 0;
 }
