@@ -1,0 +1,6 @@
+tmp/
+*.lvl
+!level.lvl
+*.swp
+editor
+snakegame
