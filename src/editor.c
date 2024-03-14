@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <raylib.h>
+
 #include "snakegame.h"
+#include "v2.h"
+#include "egfx.h"
 
 #define START_WALLS_CAPACITY 10
 
@@ -59,7 +62,7 @@ int write_level(Editor *ed, char *name)
     return 0;
 }
 
-void draw_pt_crosshair(V2 pt)
+void draw_pt_crosshair(eCanvas *canvas, V2 pt)
 {
     const int expand = 4;
     const int line_extrude = 3;
@@ -70,17 +73,16 @@ void draw_pt_crosshair(V2 pt)
     float maxx = pt.x + expand;
     float maxy = pt.y + expand;
 
-    // BOX 
-    draw_line((V2) { minx, miny }, (V2) { maxx, miny }, crosshair_color);
-    draw_line((V2) { maxx, miny }, (V2) { maxx, maxy }, crosshair_color);
-    draw_line((V2) { maxx, maxy }, (V2) { minx, maxy }, crosshair_color);
-    draw_line((V2) { minx, maxy }, (V2) { minx, miny }, crosshair_color);
+    eDrawLine(canvas, minx, miny, maxx, miny, crosshair_color);
+    eDrawLine(canvas, maxx, miny, maxx, maxy, crosshair_color);
+    eDrawLine(canvas, maxx, maxy, minx, maxy, crosshair_color);
+    eDrawLine(canvas, minx, maxy, minx, miny, crosshair_color);
 
-    // LINES
-    draw_line((V2) { pt.x, miny - line_extrude }, (V2) { pt.x, miny + line_extrude }, crosshair_color);
-    draw_line((V2) { pt.x, maxy - line_extrude }, (V2) { pt.x, maxy + line_extrude }, crosshair_color);
-    draw_line((V2) { minx - line_extrude, pt.y }, (V2) { minx + line_extrude, pt.y }, crosshair_color);
-    draw_line((V2) { maxx - line_extrude, pt.y }, (V2) { maxx + line_extrude, pt.y }, crosshair_color);
+    eDrawLine(canvas, pt.x, miny - line_extrude, pt.x, miny + line_extrude, crosshair_color);
+    eDrawLine(canvas, pt.x, maxy - line_extrude, pt.x, maxy + line_extrude, crosshair_color);
+    eDrawLine(canvas, minx - line_extrude, pt.y, minx + line_extrude, pt.y, crosshair_color);
+    eDrawLine(canvas, maxx - line_extrude, pt.y, maxx + line_extrude, pt.y, crosshair_color);
+    
 }
 
 void free_editor(Editor *ed){
@@ -112,8 +114,14 @@ int main(int argc, char *argv[])
 {
     InitWindow(W_WIDTH, W_HEIGHT, W_TITLE);
     SetTargetFPS(60);
+    
+    eCanvas canvas;
+    eInitializeCanvas(&canvas, W_WIDTH, W_HEIGHT, 0x0);
 
     printf("\n%d\n", argc);
+
+    Image img = (Image) { canvas.pixels, W_WIDTH, W_HEIGHT, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
+    Texture2D tex = LoadTextureFromImage(img);
 
     Editor ed;
     init_editor(&ed);
@@ -124,17 +132,19 @@ int main(int argc, char *argv[])
 
     while(!WindowShouldClose()){
         BeginDrawing();
-        ClearBackground(BLACK);
+
+        eFillCanvas(&canvas, 0xff181818);
+
 
         mouse = get_mouse_xy();
 
         int hovered = 0;
         
         for (int i = 0; i < ed.wall_count; ++i) {
-            wall_display(ed.walls[i]);
+            wall_display(&canvas, ed.walls[i]);
             for (int j = 0; j < 2; j++){
                 if (is_points_near(ed.walls[i].baseline[j], mouse, 10)){
-                    draw_pt_crosshair(ed.walls[i].baseline[j]);
+                    draw_pt_crosshair(&canvas, ed.walls[i].baseline[j]);
                     hovered = 1;
                     if (ed.state == EDITOR_NONE && IsMouseButtonPressed(0)){
                         ed.current_index = i;
@@ -159,13 +169,15 @@ int main(int argc, char *argv[])
             ed.state = selected_method;
             ed.current_index = ed.wall_count;
             ed.editing_index = 1;
-            wall_init(&ed.walls[ed.wall_count++], mouse, mouse, 10); 
+            wall_init(&ed.walls[ed.wall_count++], mouse, mouse, WALL_THICKNESS); 
         }
 
         if (IsKeyPressed(KEY_S)){
             write_level(&ed, "level.lvl");
         }
 
+        UpdateTexture(tex, canvas.pixels);
+        DrawTexture(tex, 0, 0, WHITE);
         EndDrawing();
     }
 

@@ -36,59 +36,6 @@ int line_line_intersection(V2 lp1, V2 lp2, V2 lp3, V2 lp4, V2 *pt)
     return 1;
 }
 
-/*
-void fill_polygon(V2 *points, int point_amount, uint32_t color) {
-    if (point_amount < 3) {
-        // Cannot fill a polygon with less than 3 points
-        return;
-    }
-
-    // Find the minimum and maximum y-coordinates to determine the scanlines
-    int min_y = points[0].y;
-    int max_y = points[0].y;
-    for (int i = 1; i < point_amount; i++) {
-        if (points[i].y < min_y) {
-            min_y = points[i].y;
-        }
-        if (points[i].y > max_y) {
-            max_y = points[i].y;
-        }
-    }
-
-    // Scanline algorithm
-    for (int y = min_y; y <= max_y; y++) {
-        // Store the intersection points
-        int intersections[point_amount];
-        int num_intersections = 0;
-
-        // Find the intersections with polygon edges
-        for (int i = 0; i < point_amount; i++) {
-            int j = (i + 1) % point_amount; // Next point
-            if ((points[i].y < y && points[j].y >= y) || (points[j].y < y && points[i].y >= y)) {
-                // If the edge crosses the scanline
-                // Find the intersection point
-                intersections[num_intersections++] = points[i].x + (double)(y - points[i].y) / (points[j].y - points[i].y) * (points[j].x - points[i].x);
-            }
-        }
-
-        // Sort the intersections
-        for (int i = 0; i < num_intersections - 1; i++) {
-            for (int j = 0; j < num_intersections - i - 1; j++) {
-                if (intersections[j] > intersections[j + 1]) {
-                    int temp = intersections[j];
-                    intersections[j] = intersections[j + 1];
-                    intersections[j + 1] = temp;
-                }
-            }
-        }
-
-        // Draw lines between the intersections to fill the polygon
-        for (int i = 0; i < num_intersections; i += 2) {
-            draw_line((V2){intersections[i], y}, (V2){intersections[i + 1], y}, color);
-        }
-    }
-}
-*/
 int overlap_on_axis(V2 *points1, int points1_amount,
                     V2 *points2, int points2_amount,
                     V2 axis)

@@ -7,7 +7,6 @@
 #include <stdint.h>
 #include <math.h>
 
-
 #define W_WIDTH 1000
 #define W_HEIGHT 1000
 #define W_TITLE "Snake game"
@@ -20,6 +19,8 @@
 #define SNAKE_ROTATION_SPEED 0.15
 #define SNAKE_RADIUS 5
 #define SNAKE_FOOD_LENGTH 10
+
+#define WALL_THICKNESS 2
 
 #define ITEM_RADIUS 15
 #include "constants.h"

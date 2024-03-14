@@ -44,7 +44,7 @@ uint8_t process_line(char *line, Level *level)
             V2 pt1 = { x1 * (float) level->screen_width,(float) y1 * level->screen_height };             
             V2 pt2 = { x2 * (float) level->screen_width,(float) y2 * level->screen_height };             
 
-            wall_init(&level->walls[level->wall_count++], pt1, pt2, 5);
+            wall_init(&level->walls[level->wall_count++], pt1, pt2, WALL_THICKNESS);
                    /* level->wall_count - 1, 
                     pt1.x, 
                     pt1.y,

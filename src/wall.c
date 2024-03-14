@@ -1,5 +1,4 @@
 #include "wall.h"
-#include "drawfuncs.h"
 #include "polygon.h"
 
 void

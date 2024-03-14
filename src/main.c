@@ -1,12 +1,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-//#include <raymath.h>
 #include <time.h>
 #include <raylib.h>
+#include <raymath.h>
 
 #include "egfx.h"
-eCanvas canvas;
 
 #define BACKGROUND_COLOR (Color) { 0x18, 0x18, 0x18, 0xff }
 
@@ -19,6 +18,7 @@ int main(int argc, char *argv[]){
 
     srand(time(NULL));
 
+    eCanvas canvas;
     eInitializeCanvas(&canvas, W_WIDTH, W_HEIGHT, 0xff000000);
 
     Color background_color = BACKGROUND_COLOR;

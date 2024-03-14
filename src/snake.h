@@ -1,9 +1,9 @@
 #ifndef EPHO_SNAKE_H
 #define EPHO_SNAKE_H
 
+#define HEAD_TAIL_PT_AMOUNT 5
 #include "v2.h"
 #include "egfx.h"
-#define HEAD_TAIL_PT_AMOUNT 5
 
 typedef enum {
     OVERFLOW_NONE   = 0,

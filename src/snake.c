@@ -66,6 +66,11 @@ BOUNDARY_OVERFLOW check_boundarys(V2 *pos)
     return retval;
 }
 
+void set_headpoints(Snake *snake)
+{
+
+}
+
 int snake_move(Snake *snake)
 {
     // Shift positions

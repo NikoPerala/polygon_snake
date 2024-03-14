@@ -10,8 +10,8 @@ FILES="./src/drawfuncs.c
        ./src/v2.c
        ./src/wall.c
        ./src/egfx.c
-       ./src/main.c"
+      "
 
-gcc $FILES -lraylib -lm -g -o snakegame
-#gcc $FILES -lraylib -lm -g ./src/editor.c -o editor
+gcc $FILES ./src/main.c -lraylib -lm -o snakegame
+gcc $FILES ./src/editor.c -lraylib -lm -o editor
 
