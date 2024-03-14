@@ -1,21 +1,25 @@
 #include <stdlib.h>
 #include <math.h>
-#include <raylib.h>
 #include <stdio.h>
-#include <raymath.h>
+//#include <raymath.h>
 #include <time.h>
+#include <raylib.h>
+
+#include "egfx.h"
+eCanvas canvas;
 
 #define BACKGROUND_COLOR (Color) { 0x18, 0x18, 0x18, 0xff }
 
 #include "snakegame.h"
 
 int main(int argc, char *argv[]){
-   
-    srand(time(NULL));
 
     InitWindow(W_WIDTH, W_HEIGHT, W_TITLE);
     SetTargetFPS(60);
 
+    srand(time(NULL));
+
+    eInitializeCanvas(&canvas, W_WIDTH, W_HEIGHT, 0xff000000);
 
     Color background_color = BACKGROUND_COLOR;
 
@@ -42,10 +46,12 @@ int main(int argc, char *argv[]){
     int highscore = 0;
     int reset = 0;
 
-    while (!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(background_color);
+    Image img = (Image) { canvas.pixels, W_WIDTH, W_HEIGHT, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+    Texture2D tex = LoadTextureFromImage(img);
 
+    while (!WindowShouldClose()){
+//        ClearBackground(background_color);
+        eFillCanvas(&canvas, 0xff181818);
         //
         // GAME LOOP 
         //
@@ -61,17 +67,21 @@ int main(int argc, char *argv[]){
        
 
         for (int i = 0; i < level.wall_amount; ++i){
-            wall_display(level.walls[i]);
+            wall_display(&canvas, level.walls[i]);
             if (snake.members[0].teleportation == 0 && check_collision_polygon(level.walls[i].points, 4, snake.headpoints, 4)) {
                 reset = 1; 
                 printf("Wall collision\n");
             }    
         }
 
-        snake_display(&snake);
-        display_item(&food);
+        snake_display(&canvas, &snake);
+        display_item(&canvas, &food);
         food.angle += 0.05;
 
+
+        BeginDrawing();
+        UpdateTexture(tex, canvas.pixels);
+        DrawTexture(tex, 0, 0, WHITE);
 
         if (IsKeyDown(KEY_LEFT)) {
             snake.direction -= SNAKE_ROTATION_SPEED;
@@ -100,6 +110,8 @@ int main(int argc, char *argv[]){
     free_level(&level);
     free_item(&food);
     free_snake(&snake);
+    
+    eFreeCanvas(&canvas);
 
     return 0;
 }

@@ -36,6 +36,7 @@ int line_line_intersection(V2 lp1, V2 lp2, V2 lp3, V2 lp4, V2 *pt)
     return 1;
 }
 
+/*
 void fill_polygon(V2 *points, int point_amount, uint32_t color) {
     if (point_amount < 3) {
         // Cannot fill a polygon with less than 3 points
@@ -87,7 +88,7 @@ void fill_polygon(V2 *points, int point_amount, uint32_t color) {
         }
     }
 }
-
+*/
 int overlap_on_axis(V2 *points1, int points1_amount,
                     V2 *points2, int points2_amount,
                     V2 axis)

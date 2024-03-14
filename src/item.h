@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "v2.h"
 #include "drawfuncs.h"
+#include "egfx.h"
 
 typedef enum {
     ITEM_NONE,
@@ -21,8 +22,8 @@ typedef struct Item {
 
 uint8_t initialize_item(Item *item);
 void free_item(Item *item);
-void display_item(Item *item);
-void display_apple(Item *item);
+void display_item(eCanvas *canvas, Item *item);
+void display_apple(eCanvas *canvas, Item *item);
 
 
 #endif // EPHO_ITEM_H

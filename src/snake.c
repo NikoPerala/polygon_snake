@@ -122,25 +122,24 @@ int snake_move(Snake *snake)
     return 1;
 }
 
-void snake_display(Snake *snake)
+void snake_display(eCanvas *canvas, Snake *snake)
 {
 
     // These to config / constants
-    uint32_t c = 0x0080a0ff;
+    uint32_t c = 0xff80a0ff;
     int thickness = 5;
     float step = 360.f / snake->length;
 
     for (int i = snake->length - 1; i >= 0; --i){
-        c = snake->members[i].teleportation > 0 ? 0xff0000ff : 0x0080a0ff;
         if (i > 0 && i <= snake->length - 1 && snake->members[i].teleportation == OVERFLOW_NONE){ 
             V2 pts[] = { 
                 snake->members[i].wing1, snake->members[i].wing2,
                 snake->members[i - 1].wing2, snake->members[i - 1].wing1
             };
-            fill_polygon(pts, 4, c);
+            eFillPolygon(canvas, pts, 4, c);
         }
-        if (i == 0) fill_polygon(snake->headpoints, HEAD_TAIL_PT_AMOUNT, c);
-        if (i == snake->length - 1) fill_polygon(snake->tailpoints, HEAD_TAIL_PT_AMOUNT, c);
+        if (i == 0) eFillPolygon(canvas, snake->headpoints, HEAD_TAIL_PT_AMOUNT, c);
+        if (i == snake->length - 1) eFillPolygon(canvas, snake->tailpoints, HEAD_TAIL_PT_AMOUNT, c);
     }
 }
 

@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <stdint.h>
 #include "v2.h"
+#include "egfx.h"
 
 void draw_line(V2 pt1, V2 pt2, uint32_t color);
 void draw_circle(V2 pt, float radius, uint32_t color);

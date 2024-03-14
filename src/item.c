@@ -32,15 +32,15 @@ uint8_t initialize_item(Item *item)
     return 0;
 }
 
-void display_item(Item *item)
+void display_item(eCanvas *canvas, Item *item)
 {
     switch (item->type){
         case ITEM_APPLE:
-            display_apple(item);
+            display_apple(canvas, item);
     }
 }
 
-void display_apple(Item *item)
+void display_apple(eCanvas *canvas, Item *item)
 {
     float step = TAU / item->point_amount;
     
@@ -50,6 +50,6 @@ void display_apple(Item *item)
          item->points[i] = (V2) { x, y }; 
     }
 
-    fill_polygon(item->points, item->point_amount, 0xff0000ff);
+    eFillPolygon(canvas, item->points, item->point_amount, 0xff0000ff);
     
 }

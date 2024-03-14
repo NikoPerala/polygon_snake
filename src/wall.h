@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "v2.h"
 #include "constants.h"
+#include "egfx.h"
 
 #define WALL_POINT_AMOUNT 4
 
@@ -20,6 +21,6 @@ typedef struct Wall {
 void wall_init(Wall *wall, V2 pt1, V2 pt2, int thickness);
 void wall_update_point(Wall *wall, V2 point, int id);
 void wall_calculate_points(Wall *wall);
-void wall_display(Wall wall);
+void wall_display(eCanvas *canvas, Wall wall);
 
 #endif // EPHO_WALL_H

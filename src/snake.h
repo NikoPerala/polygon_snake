@@ -2,7 +2,7 @@
 #define EPHO_SNAKE_H
 
 #include "v2.h"
-
+#include "egfx.h"
 #define HEAD_TAIL_PT_AMOUNT 5
 
 typedef enum {
@@ -35,7 +35,7 @@ void free_snake(Snake *snake);
 
 void snake_shift_members(Snake *snake);
 int snake_move(Snake *snake);
-void snake_display(Snake *snake);
+void snake_display(eCanvas *canvas, Snake *snake);
 uint8_t snake_eat(Snake *snake);
 void snake_reset(Snake *snake);
 

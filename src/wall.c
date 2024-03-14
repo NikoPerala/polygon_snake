@@ -46,8 +46,8 @@ wall_calculate_points(Wall *wall)
 }
 
 void
-wall_display(Wall wall)
+wall_display(eCanvas *canvas, Wall wall)
 {
-    fill_polygon(wall.points, WALL_POINT_AMOUNT, 0x00ff00ff);
+    eFillPolygon(canvas, wall.points, WALL_POINT_AMOUNT, 0xff00a000);
 }
 
