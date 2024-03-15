@@ -39,7 +39,7 @@ uint8_t process_line(char *line, Level *level)
             float x, y, angle;
             sscanf(line, "s%f,%f:%f", &x, &y, &angle);
 
-            V2 pt = (V2) { x, y };
+            V2 pt = (V2) { x * level->screen_width, y * level->screen_height };
             level->startpoint = pt;
             level->startangle = angle;
             break;
