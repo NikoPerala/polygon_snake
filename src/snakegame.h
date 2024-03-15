@@ -46,7 +46,10 @@ typedef struct Line {
 typedef struct Level {
     uint16_t screen_width; //quick && dirty
     uint16_t screen_height; //quick && dirty
-    
+
+    V2 startpoint;
+    float startangle;
+
     uint8_t loading_status;
     uint8_t wall_amount;
     uint8_t wall_count;

@@ -34,6 +34,15 @@ uint8_t process_line(char *line, Level *level)
         case '/':
             // TODO: NOT IMPLEMENTED: New level
             return 0;
+        case 's':
+
+            float x, y, angle;
+            sscanf(line, "s%f,%f:%f", &x, &y, &angle);
+
+            V2 pt = (V2) { x, y };
+            level->startpoint = pt;
+            level->startangle = angle;
+            break;
         case 'w':
             if (!(level->loading_status && (1 << GOT_WALL_AMOUNT))) return LEVEL_INVALID_FILE_ERROR;
             // Parse coords

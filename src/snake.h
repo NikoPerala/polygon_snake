@@ -37,6 +37,6 @@ void snake_shift_members(Snake *snake);
 int snake_move(Snake *snake);
 void snake_display(eCanvas *canvas, Snake *snake);
 uint8_t snake_eat(Snake *snake);
-void snake_reset(Snake *snake);
+void snake_reset(Snake *snake, V2 startpoint, float angle);
 
 #endif // EPHO_SNAKE_H

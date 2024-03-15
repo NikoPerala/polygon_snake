@@ -31,7 +31,8 @@ int main(int argc, char *argv[]){
 
     Snake snake = { 0 };
     init_snake(&snake);
-    
+    snake_reset(&snake, level.startpoint, level.startangle);
+
     Item food = { 0 };
     food.type = ITEM_APPLE;
     initialize_item(&food);
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]){
 
         if (reset) {
             reset = 0;
-            snake_reset(&snake);
+            snake_reset(&snake, level.startpoint, level.startangle);
             highscore = score > highscore ? score : highscore;
             score = 0;
         }

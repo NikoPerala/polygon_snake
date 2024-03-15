@@ -24,17 +24,17 @@ void init_snake(Snake *snake)
     }
 }
 
-void snake_reset(Snake *snake)
+void snake_reset(Snake *snake, V2 startpoint, float angle)
 {
     snake->length = SNAKE_START_LENGTH;
-    snake->direction = SNAKE_START_ANGLE;
+    snake->direction = angle;
     snake->speed = SNAKE_START_SPEED;
     
     for (int i = 0; i < SNAKE_START_LENGTH; ++i){
         snake->members[i].teleportation = 0;
-        snake->members[i].position = SNAKE_START_POINT;
-        snake->members[i].wing1 = SNAKE_START_POINT;
-        snake->members[i].wing2 = SNAKE_START_POINT;
+        snake->members[i].position = startpoint;
+        snake->members[i].wing1 = startpoint;
+        snake->members[i].wing2 = startpoint;
     }
 }
 
