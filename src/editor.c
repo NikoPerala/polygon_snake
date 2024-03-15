@@ -150,16 +150,7 @@ int write_level(Editor *ed, char *name)
         }
         fprintf(fp, row);
     }
-/*
-    for (int i = 0; i < ed->wall_count; ++i){
-        float x1 = ed->walls[i].baseline[0].x / W_WIDTH;
-        float y1 = ed->walls[i].baseline[0].y / W_HEIGHT;
-        float x2 = ed->walls[i].baseline[1].x / W_WIDTH;
-        float y2 = ed->walls[i].baseline[1].y / W_HEIGHT;
-        sprintf(row, "w%.3f,%.3f:%.3f,%.3f\n", x1, y1, x2, y2);
-        fprintf(fp, row);
-    }
-*/
+    
     fclose(fp);
 
     return 0;
