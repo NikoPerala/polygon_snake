@@ -6,9 +6,6 @@
 #include <raymath.h>
 
 #include "egfx.h"
-
-#define BACKGROUND_COLOR (Color) { 0x18, 0x18, 0x18, 0xff }
-
 #include "snakegame.h"
 
 int main(int argc, char *argv[]){
@@ -51,7 +48,6 @@ int main(int argc, char *argv[]){
     Texture2D tex = LoadTextureFromImage(img);
 
     while (!WindowShouldClose()){
-//        ClearBackground(background_color);
         eFillCanvas(&canvas, 0xff181818);
         //
         // GAME LOOP 
@@ -63,7 +59,6 @@ int main(int argc, char *argv[]){
             food.position = V2_random(0, W_WIDTH, 0, W_HEIGHT);
             if (snake_eat(&snake)) break;
             score++;
-            printf("Food eaten\n");
         }
        
 
@@ -71,7 +66,6 @@ int main(int argc, char *argv[]){
             wall_display(&canvas, level.walls[i]);
             if (snake.members[0].teleportation == 0 && check_collision_polygon(level.walls[i].points, 4, snake.headpoints, 4)) {
                 reset = 1; 
-                printf("Wall collision\n");
             }    
         }
 

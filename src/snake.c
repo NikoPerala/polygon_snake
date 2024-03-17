@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define HEADPOINTS_AMOUNT 5
-#define SNAKE_THICKNESS 7
+#define SNAKE_THICKNESS 3
 
 void init_snake(Snake *snake)
 {
@@ -18,9 +18,6 @@ void init_snake(Snake *snake)
     snake->members = malloc(sizeof(SnakeMember) * snake->capacity);
     for (int i = 0; i < SNAKE_START_LENGTH; ++i){
         snake->members[i] = (SnakeMember) { 0 };
-        snake->members[i].position = SNAKE_START_POINT;
-        snake->members[i].wing1 = SNAKE_START_POINT;
-        snake->members[i].wing2 = SNAKE_START_POINT;
     }
 }
 
