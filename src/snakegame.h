@@ -1,8 +1,6 @@
 #ifndef EPHO_SNAKEGAME_H
 #define EPHO_SNAKEGAME_H
 
-#include <raylib.h>
-#include <raymath.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
@@ -24,7 +22,6 @@
 #define ITEM_RADIUS 15
 #include "constants.h"
 #include "v2.h"
-#include "drawfuncs.h"
 #include "item.h"
 #include "wall.h"
 #include "polygon.h"

@@ -1,7 +1,7 @@
 #ifndef EPHO_DRAWFUNCS_H
 #define EPHO_DRAWFUNCS_H
 
-#include <raylib.h>
+
 #include <stdint.h>
 #include "v2.h"
 #include "egfx.h"

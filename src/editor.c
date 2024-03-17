@@ -2,7 +2,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
+
 #include <raylib.h>
+#undef PI
 
 #include "snakegame.h"
 #include "v2.h"
@@ -25,16 +27,10 @@ uint8_t init_editor(Editor *ed){
         ed->pointsystems[i] = (PointSystem) { 0 };
     }
 
+    //First pointsystem is the startpoint
     add_pointsystem(ed, ARROW);
     ed->pointsystems[0].points[0] = (V2) { W_WIDTH >> 1 , W_HEIGHT >> 1 };
     update_pointsystem(&ed->pointsystems[0]);
-    // First pointsystem is the startpoint
-    /*
-    ed->pointsystem_count = 1;
-    if (initialize_pointsystem(&ed->pointsystems[0], ARROW) != 0) return 1;
-    ed->pointsystems[0].points[0] = (V2) { W_WIDTH >> 1 , W_HEIGHT >> 1 };
-    update_pointsystem(&ed->pointsystems[0]);
-    */
 
     return 0;
 }
@@ -49,58 +45,6 @@ uint8_t add_pointsystem(Editor *ed, PointSystemType type)
 
     initialize_pointsystem(&ed->pointsystems[ed->pointsystem_count], type);
     ed->pointsystem_count++;
-}
-
-uint8_t initialize_pointsystem(PointSystem *ps, PointSystemType type)
-{
-    ps->type = type;
-    switch (ps->type){
-        case WALL:
-            ps->point_amount = 6;
-            ps->movable_points = 2;
-            break;
-        case ARROW:
-            ps->point_amount = 4;
-            ps->movable_points = 1;
-            break;
-    }
-    ps->angle = 0;
-    ps->points = (V2*) malloc(sizeof(V2) * ps->point_amount);
-    if (ps->points == NULL) return 1;
-    for (int i = 0; i < ps->point_amount; ++i){
-        ps->points[i] = (V2) { 0 };
-    }
-    
-    return 0;
-}
-
-
-void display_pointsystem(eCanvas *canvas, PointSystem *ps)
-{
-    switch (ps->type){
-        case WALL:
-            display_wall(canvas, ps, 0xff00A000);
-            break;
-        case ARROW:
-            display_arrow(canvas, ps, 0xFFA0A0A0);
-            break;
-    }
-}
-void update_pointsystem(PointSystem *ps)
-{
-    switch (ps->type){
-        case WALL:
-            update_wall(ps);
-            break;
-        case ARROW:
-            update_arrow(ps->points, ps->angle);
-            break;
-    }
-}
-
-void set_pointsystem_point(PointSystem *ps, int id, V2 pt)
-{
-    ps->points[id] = pt;
 }
 
 int count_pointsystem_type(Editor *ed, PointSystemType type)
@@ -208,6 +152,7 @@ V2 get_mouse_xy()
     return (V2) { m.x, m.y };
 }
 
+/*
 #define ARROW_LENGTH 30
 #define ARROW_POINTER_LENGTH 10
 #define ARROW_ANGLE QUARTERPI
@@ -273,6 +218,7 @@ void display_arrow(eCanvas *canvas, PointSystem *ps, uint32_t color)
               ps->points[3].x, ps->points[3].y, color);
 }
 
+*/
 int main(int argc, char *argv[])
 {
     InitWindow(W_WIDTH, W_HEIGHT, W_TITLE);

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include "v2.h"
-#include "drawfuncs.h"
 #include "egfx.h"
 
 typedef enum {

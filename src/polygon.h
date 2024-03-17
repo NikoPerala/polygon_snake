@@ -1,6 +1,7 @@
 #ifndef EPHO_POLYGON_H
 #define EPHO_POLYGON_H
 
+#include <stdint.h>
 #include "v2.h"
 
 typedef struct poly {

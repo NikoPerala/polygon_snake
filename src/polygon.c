@@ -1,5 +1,5 @@
-#include "drawfuncs.h"
 #include <math.h>
+#include "polygon.h"
 
 #define EPSILON 1e-6
 

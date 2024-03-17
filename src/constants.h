@@ -1,6 +1,7 @@
 #ifndef EPHO_CONSTANTS_H
 #define EPHO_CONSTANTS_H
 
+#define PI              3.141592653589793
 #define TAU             6.283185307179586
 #define HALFPI          1.5707963267948966
 #define QUARTERPI       0.7853981633974483

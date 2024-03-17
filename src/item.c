@@ -3,7 +3,6 @@
 
 #include "item.h"
 #include "snakegame.h"
-#include "drawfuncs.h"
 
 #define APPLE_RADIUS 15
 #define APPLE_POINTS 6

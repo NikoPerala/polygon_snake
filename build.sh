@@ -2,7 +2,7 @@
 
 set -xe
 
-FILES="./src/drawfuncs.c 
+FILES="
        ./src/item.c
        ./src/level_parser.c 
        ./src/polygon.c
@@ -10,6 +10,7 @@ FILES="./src/drawfuncs.c
        ./src/v2.c
        ./src/wall.c
        ./src/egfx.c
+       ./src/pointsystem.c
       "
 
 gcc $FILES ./src/main.c -lraylib -lm -o snakegame

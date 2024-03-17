@@ -2,8 +2,9 @@
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
+
 #include <raylib.h>
-#include <raymath.h>
+#undef PI
 
 #include "egfx.h"
 #include "snakegame.h"
@@ -18,9 +19,6 @@ int main(int argc, char *argv[]){
     eCanvas canvas;
     eInitializeCanvas(&canvas, W_WIDTH, W_HEIGHT, 0xff000000);
 
-    Color background_color = BACKGROUND_COLOR;
-
-   
     Level level = get_level(W_WIDTH, W_HEIGHT);  
     create_level_from_file("level.lvl", &level);
     
