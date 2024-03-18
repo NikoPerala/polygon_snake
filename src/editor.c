@@ -167,28 +167,29 @@ float distance_from_line(V2 pt, V2 pt1, V2 pt2)
 
 void draw_debug(Editor *ed)
 {
-    DrawRectangle(0, 0, DEBUG_W_WIDTH, W_HEIGHT, BLACK);
+    DrawRectangle(W_WIDTH, 0, DEBUG_W_WIDTH, W_HEIGHT, BLACK);
 
+    Color color = (Color) { 0xA0, 0xA0, 0xA0, 0xff };
     char dbgmsg[128];
     int font_size = 20;
     
     sprintf(dbgmsg, "Editor:");
-    DrawText(dbgmsg, 5, 0 * font_size + 5, font_size, WHITE);
+    DrawText(dbgmsg, W_WIDTH + 5, 0 * font_size + 5, font_size, color);
 
     sprintf(dbgmsg, "  state: %s", EditorStateNames[ed->state]);
-    DrawText(dbgmsg, 5, 1 * font_size + 5, font_size, WHITE);
+    DrawText(dbgmsg, W_WIDTH + 5, 1 * font_size + 5, font_size, color);
 
     sprintf(dbgmsg, "  PS Capacity: %d", ed->pointsystem_capacity);
-    DrawText(dbgmsg, 5, 2 * font_size + 5, font_size, WHITE);
+    DrawText(dbgmsg, W_WIDTH + 5, 2 * font_size + 5, font_size, color);
     
     sprintf(dbgmsg, "  PS Count: %d", ed->pointsystem_count);
-    DrawText(dbgmsg, 5, 3 * font_size + 5, font_size, WHITE);
+    DrawText(dbgmsg, W_WIDTH + 5, 3 * font_size + 5, font_size, color);
     
     sprintf(dbgmsg, "  PS id: %d", ed->pointsystem_id);
-    DrawText(dbgmsg, 5, 4 * font_size + 5, font_size, WHITE);
+    DrawText(dbgmsg, W_WIDTH + 5, 4 * font_size + 5, font_size, color);
     
     sprintf(dbgmsg, "  point id: %d", ed->point_id);
-    DrawText(dbgmsg, 5, 5 * font_size + 5, font_size, WHITE);
+    DrawText(dbgmsg, W_WIDTH + 5, 5 * font_size + 5, font_size, color);
 }
 
 
@@ -216,9 +217,7 @@ int main(int argc, char *argv[])
         BeginDrawing();
         eFillCanvas(&canvas, 0xff181818);
         
-        true_mouse = get_mouse_xy();
-        mouse.x = true_mouse.x - DEBUG_W_WIDTH;
-        mouse.y = true_mouse.y;
+        mouse = get_mouse_xy();
 
 
         if (ed.state != EDITOR_STATE_NONE && !IsMouseButtonDown(0))
@@ -266,7 +265,7 @@ int main(int argc, char *argv[])
                     for (int j = i; j < ed.pointsystem_count - 1; ++j){
                         ed.pointsystems[j] = ed.pointsystems[j + 1];
                     }
-                    ed.pointsystem_count--;
+                        ed.pointsystem_count--;
                 }
             }
             display_pointsystem(&canvas, &ed.pointsystems[i], color);
@@ -295,25 +294,26 @@ int main(int argc, char *argv[])
                 draw_pt_crosshair(&canvas, *pt);
                 break;
             case EDITOR_STATE_MOVE_WALL:
-                 PointSystem *ps = &ed.pointsystems[ed.pointsystem_id];
 
-                 float angle = ps->angle - HALFPI;
-                 float distance = V2_distance(ps->points[0], ps->points[1]);
-                 
-                 if (!ed.state_ready){
-                    ed.offset = (V2) { ps->points[0].x - mouse.x, ps->points[0].y - mouse.y };  
-                    ed.state_ready = 1;
-                 }
-                 V2 np = {
-                       mouse.x + ed.offset.x + distance * cos(angle),
-                       mouse.y + ed.offset.y + distance * sin(angle)
-                 }; 
+                PointSystem *ps = &ed.pointsystems[ed.pointsystem_id];
 
-                 ps->points[0] = V2_add(mouse, ed.offset);
-                 ps->points[1] = np;
+                float angle = ps->angle - HALFPI;
+                float length = V2_distance(ps->points[0], ps->points[1]);
+                
+                if (!ed.state_ready){
+                   ed.offset = (V2) { ps->points[0].x - mouse.x, ps->points[0].y - mouse.y };  
+                   ed.state_ready = 1;
+                }
+                V2 np = {
+                      mouse.x + ed.offset.x + length * cos(angle),
+                      mouse.y + ed.offset.y + length * sin(angle)
+                }; 
 
-                 update_pointsystem(ps);
-                 break;
+                ps->points[0] = V2_add(mouse, ed.offset);
+                ps->points[1] = np;
+
+                update_pointsystem(ps);
+                break;
         }
 
 
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
             write_level(&ed, "level.lvl");
         }
         UpdateTexture(tex, canvas.pixels);
-        DrawTexture(tex, DEBUG_W_WIDTH, 0, WHITE);
+        DrawTexture(tex, 0, 0, WHITE);
 
         draw_debug(&ed);
 
