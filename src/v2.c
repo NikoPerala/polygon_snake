@@ -20,6 +20,35 @@ float V2_dot_product(V2 a, V2 b)
     return (a.x * b.x + a.y * b.y);
 }
 
+V2 V2_sub(V2 a, V2 b)
+{
+    V2 ret = {
+        a.x - b.x,
+        a.y - b.y
+    };
+
+    return ret;
+}
+
+V2 V2_add(V2 a, V2 b)
+{
+    V2 ret = {
+        a.x + b.x,
+        a.y + b.y
+    };
+
+    return ret;
+}
+
+V2 V2_delta_vector(V2 pt1, V2 pt2)
+{
+    V2 delta;
+
+    delta.x = pt2.x - pt1.x;
+    delta.y = pt2.y - pt1.y;
+
+    return delta;
+}
 
 V2 V2_random(int minx, int maxx, int miny, int maxy)
 {

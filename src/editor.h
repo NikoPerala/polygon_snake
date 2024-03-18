@@ -30,6 +30,9 @@ typedef struct Editor {
     int point_id;
     float angle;
     int hovered;
+
+    V2 offset;
+    int state_ready;
 } Editor;
 
 uint8_t init_editor(Editor *ed);
