@@ -47,6 +47,8 @@ uint8_t add_pointsystem(Editor *ed, PointSystemType type)
     ed->pointsystem_count++;
 }
 
+
+
 int count_pointsystem_type(Editor *ed, PointSystemType type)
 {
     int retval = 0;
@@ -84,12 +86,12 @@ int write_level(Editor *ed, char *name)
                 float y1 = ps->points[0].y / W_HEIGHT; 
                 float x2 = ps->points[1].x / W_WIDTH;
                 float y2 = ps->points[1].y / W_HEIGHT;
-                sprintf(row, "w%.3f,%.3f:%.3f,%.3f\n", x1, y1, x2, y2);
+                sprintf(row, "w%f,%f:%f,%f\n", x1, y1, x2, y2);
                 break;
             case ARROW:
                 float x = ps->points[0].x / W_WIDTH;
                 float y = ps->points[0].y / W_WIDTH;
-                sprintf(row, "s%.3f,%.3f:%.3f\n", x, y, ps->angle);
+                sprintf(row, "s%f,%f:%f\n", x, y, ps->angle);
                 break;
         }
         fprintf(fp, row);
@@ -104,7 +106,7 @@ void draw_pt_crosshair(eCanvas *canvas, V2 pt)
 {
     const int expand = 4;
     const int line_extrude = 3;
-    uint32_t crosshair_color = 0xa0a0a0ff;
+    uint32_t crosshair_color = 0xFFDDDDDD;
 
     float minx = pt.x - expand;
     float miny = pt.y - expand;
@@ -152,76 +154,53 @@ V2 get_mouse_xy()
     return (V2) { m.x, m.y };
 }
 
+float distance_from_line(V2 pt, V2 pt1, V2 pt2)
+{
+    float dx = pt2.x - pt1.x;
+    float dy = pt2.y - pt1.y;
 /*
-#define ARROW_LENGTH 30
-#define ARROW_POINTER_LENGTH 10
-#define ARROW_ANGLE QUARTERPI
-
-void display_wall(eCanvas *canvas, PointSystem *ps, uint32_t color)
-{
-    V2 points[4] = {
-        ps->points[2],
-        ps->points[3],
-        ps->points[4],
-        ps->points[5],
-    };
-
-    eFillPolygon(canvas, points, 4, color);
-}
-
-void update_wall(PointSystem *ps)
-{
-    float dx = ps->points[1].x - ps->points[0].x;
-    float dy = ps->points[1].y - ps->points[0].y;
-
-    ps->angle = atan2(dy, dx) + HALFPI;
-
-    ps->points[2].x = ps->points[0].x + WALL_THICKNESS * cos(ps->angle);
-    ps->points[2].y = ps->points[0].y + WALL_THICKNESS * sin(ps->angle);
-
-    ps->points[3].x = ps->points[1].x + WALL_THICKNESS * cos(ps->angle);
-    ps->points[3].y = ps->points[1].y + WALL_THICKNESS * sin(ps->angle);
-
-    ps->points[4].x = ps->points[1].x + WALL_THICKNESS * cos(ps->angle + PI);
-    ps->points[4].y = ps->points[1].y + WALL_THICKNESS * sin(ps->angle + PI);
-
-    ps->points[5].x = ps->points[0].x + WALL_THICKNESS * cos(ps->angle + PI);
-    ps->points[5].y = ps->points[0].y + WALL_THICKNESS * sin(ps->angle + PI);
-}
-
-void update_arrow(V2 *points, float angle)
-{ 
-    points[1] = (V2){
-            points[0].x + ARROW_LENGTH * cos(angle),
-            points[0].y + ARROW_LENGTH * sin(angle)
-                    };
-    points[2] = (V2) {
-            points[1].x + ARROW_POINTER_LENGTH * cos(angle - THREEQUARTERPI),
-            points[1].y + ARROW_POINTER_LENGTH * sin(angle - THREEQUARTERPI)
-                           };
-    points[3] = (V2) {
-            points[1].x + ARROW_POINTER_LENGTH * cos(angle + THREEQUARTERPI),
-            points[1].y + ARROW_POINTER_LENGTH * sin(angle + THREEQUARTERPI)
-                           };
-}
-
-void display_arrow(eCanvas *canvas, PointSystem *ps, uint32_t color)
-{
-    eDrawLine(canvas, 
-              ps->points[0].x, ps->points[0].y,
-              ps->points[1].x, ps->points[1].y, color);
-    eDrawLine(canvas, 
-              ps->points[1].x, ps->points[1].y,
-              ps->points[2].x, ps->points[2].y, color);
-    eDrawLine(canvas, 
-              ps->points[1].x, ps->points[1].y,
-              ps->points[3].x, ps->points[3].y, color);
-}
-
+    float num = abs((pt2.x - pt1.x) * (pt1.y - pt.y) - (pt1.x - pt.x) * (pt2.y - pt1.y));
+    float den = sqrtf(dx * dx + dy * dy);
 */
+    float angle = atan2(dy, dx);
+    float num = abs((pt2.x - pt1.x) * (pt1.y - pt.y) - (pt1.x - pt.x) * (pt2.y - pt1.y));
+    float den = sqrtf(dx * dx + dy * dy);
+    
+    return num / den;
+}
+
+#define DEBUG_W_WIDTH 450
+
+void draw_debug(Editor *ed)
+{
+    DrawRectangle(0, 0, DEBUG_W_WIDTH, W_HEIGHT, BLACK);
+
+    char dbgmsg[128];
+    int font_size = 20;
+    
+    sprintf(dbgmsg, "Editor:");
+    DrawText(dbgmsg, 5, 0 * font_size + 5, font_size, WHITE);
+
+    sprintf(dbgmsg, "  state: %s", EditorStateNames[ed->state]);
+    DrawText(dbgmsg, 5, 1 * font_size + 5, font_size, WHITE);
+
+    sprintf(dbgmsg, "  PS Capacity: %d", ed->pointsystem_capacity);
+    DrawText(dbgmsg, 5, 2 * font_size + 5, font_size, WHITE);
+    
+    sprintf(dbgmsg, "  PS Count: %d", ed->pointsystem_count);
+    DrawText(dbgmsg, 5, 3 * font_size + 5, font_size, WHITE);
+    
+    sprintf(dbgmsg, "  PS id: %d", ed->pointsystem_id);
+    DrawText(dbgmsg, 5, 4 * font_size + 5, font_size, WHITE);
+    
+    sprintf(dbgmsg, "  point id: %d", ed->point_id);
+    DrawText(dbgmsg, 5, 5 * font_size + 5, font_size, WHITE);
+}
+
+
 int main(int argc, char *argv[])
 {
-    InitWindow(W_WIDTH, W_HEIGHT, W_TITLE);
+    InitWindow(W_WIDTH + DEBUG_W_WIDTH, W_HEIGHT, W_TITLE);
     SetTargetFPS(60);
     
     eCanvas canvas;
@@ -235,24 +214,31 @@ int main(int argc, char *argv[])
     init_editor(&ed);
 
     V2 mouse;
+    V2 true_mouse;
 
     char dbgmsg[64];
 
     while(!WindowShouldClose()){
         BeginDrawing();
         eFillCanvas(&canvas, 0xff181818);
-        mouse = get_mouse_xy();
+        
+        true_mouse = get_mouse_xy();
+        mouse.x = true_mouse.x - DEBUG_W_WIDTH;
+        mouse.y = true_mouse.y;
+
 
         if (ed.state != EDITOR_STATE_NONE && !IsMouseButtonDown(0))
         {
             ed.state = EDITOR_STATE_NONE;
+            ed.point_id = -1;
+            ed.pointsystem_id = -1;
         }
 
 
+        ed.hovered = 0;
         for (int i = 0; i < ed.pointsystem_count; ++i){
             for (int pid = 0; pid < ed.pointsystems[i].movable_points; ++pid)
             {
-                ed.hovered = 0;
                 if (is_points_near(ed.pointsystems[i].points[pid], mouse, 10) && ed.state == EDITOR_STATE_NONE)
                 {
                     ed.hovered = 1;
@@ -265,7 +251,20 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            display_pointsystem(&canvas, &ed.pointsystems[i]);
+
+
+            uint32_t color = 0xFF00A000;
+            if (ed.pointsystems[i].type == WALL && !ed.hovered && ed.state == EDITOR_STATE_NONE) 
+            {
+                PointSystem *ps = &ed.pointsystems[i];
+                float distance = distance_from_line(mouse, ps->points[0], ps->points[1]); 
+                color = distance < 5 ? 0xFF90A090 : 0xFF00A000;
+                if (IsMouseButtonPressed(0) && distance < 5){
+                    ed.state = EDITOR_STATE_MOVE_WALL;
+                    ed.pointsystem_id = i;
+                }
+            }
+            display_pointsystem(&canvas, &ed.pointsystems[i], color);
         }
 
         if (ed.state == EDITOR_STATE_NONE && IsMouseButtonPressed(0) && !ed.hovered)
@@ -301,9 +300,10 @@ int main(int argc, char *argv[])
             write_level(&ed, "level.lvl");
         }
         UpdateTexture(tex, canvas.pixels);
-        DrawTexture(tex, 0, 0, WHITE);
-        sprintf(dbgmsg, "startpos x: %.2f y: %.2f angle: %.2f", ed.pointsystems[0].points[0].x, ed.pointsystems[0].points[0].y,  ed.pointsystems[0].angle);
-        DrawText(dbgmsg, 20, 20, 20, WHITE);
+        DrawTexture(tex, DEBUG_W_WIDTH, 0, WHITE);
+
+        draw_debug(&ed);
+
         EndDrawing();
     }
 

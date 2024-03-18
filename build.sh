@@ -13,6 +13,6 @@ FILES="
        ./src/pointsystem.c
       "
 
-gcc $FILES ./src/main.c -lraylib -lm -o snakegame
+#gcc $FILES ./src/main.c -lraylib -lm -g -o snakegame
 gcc $FILES ./src/editor.c -lraylib -lm -o editor
 

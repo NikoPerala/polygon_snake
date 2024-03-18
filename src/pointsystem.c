@@ -13,6 +13,9 @@ uint8_t initialize_pointsystem(PointSystem *ps, PointSystemType type)
             ps->point_amount = 4;
             ps->movable_points = 1;
             break;
+        case SNAKE_SEGMENT:
+            ps->point_amount = 4;
+            ps->movable_points = 0;
     }
     ps->angle = 0;
     ps->points = (V2*) malloc(sizeof(V2) * ps->point_amount);
@@ -24,15 +27,16 @@ uint8_t initialize_pointsystem(PointSystem *ps, PointSystemType type)
     return 0;
 }
 
-void display_pointsystem(eCanvas *canvas, PointSystem *ps)
+void display_pointsystem(eCanvas *canvas, PointSystem *ps, uint32_t color)
 {
     switch (ps->type){
         case WALL:
-            display_wall(canvas, ps, 0xff00A000);
+            display_wall(canvas, ps, color);
             break;
         case ARROW:
             display_arrow(canvas, ps, 0xFFA0A0A0);
             break;
+            
     }
 }
 void update_pointsystem(PointSystem *ps)

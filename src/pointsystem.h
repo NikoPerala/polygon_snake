@@ -6,9 +6,12 @@
 #include "egfx.h"
 #include "constants.h"
 
-typedef enum {                 
+typedef enum {                
+    NONE, 
     WALL,
     ARROW,
+    SNAKE_SEGMENT,
+    SNAKE_END
 } PointSystemType;
 
 typedef struct PointSystem {
@@ -20,7 +23,7 @@ typedef struct PointSystem {
 } PointSystem; 
 
 uint8_t initialize_pointsystem(PointSystem *ps, PointSystemType type);
-void display_pointsystem(eCanvas *canvas, PointSystem *ps);
+void display_pointsystem(eCanvas *canvas, PointSystem *ps, uint32_t color);
 void update_pointsystem(PointSystem *ps);
 
 void update_arrow(V2 *points, float angle);
