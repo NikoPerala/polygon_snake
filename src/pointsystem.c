@@ -1,5 +1,6 @@
 #include "pointsystem.h"
 #include "snakegame.h"
+#include "common.h"
 
 uint8_t initialize_pointsystem(PointSystem *ps, PointSystemType type)
 {
@@ -90,6 +91,36 @@ void update_wall(PointSystem *ps)
 
     ps->points[5].x = ps->points[0].x + WALL_THICKNESS * cos(ps->angle + PI);
     ps->points[5].y = ps->points[0].y + WALL_THICKNESS * sin(ps->angle + PI);
+}
+
+void move_wall(PointSystem *ps, V2 mouse, int *state_ready)
+{
+     V2 new1, new2;
+     V2 prev1 = ps->points[0];
+     V2 prev2 = ps->points[1];
+
+     float angle = ps->angle - HALFPI;
+     float length = V2_distance(ps->points[0], ps->points[1]);
+
+     if (!*state_ready){
+        ps->offset = (V2) { ps->points[0].x - mouse.x, ps->points[0].y - mouse.y };
+        *state_ready = 1;
+     }
+
+     new1 = V2_add(mouse, ps->offset);
+     new2 = (V2) { mouse.x + ps->offset.x + length * cos(angle),
+                   mouse.y + ps->offset.y + length * sin(angle)};
+
+     if (boundary_overflow(new1, 0, W_WIDTH, 0, W_HEIGHT)
+      || boundary_overflow(new2, 0, W_WIDTH, 0, W_HEIGHT)){
+         new1 = prev1;    
+         new2 = prev2;
+     }
+
+     ps->points[0] = new1;
+     ps->points[1] = new2;
+
+     update_pointsystem(ps);
 }
 
 void update_arrow(V2 *points, float angle)

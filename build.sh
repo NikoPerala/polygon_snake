@@ -11,6 +11,7 @@ FILES="
        ./src/wall.c
        ./src/egfx.c
        ./src/pointsystem.c
+       ./src/common.c
       "
 
 #gcc $FILES ./src/main.c -lraylib -lm -g -o snakegame

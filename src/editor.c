@@ -10,8 +10,7 @@
 #include "v2.h"
 #include "egfx.h"
 #include "editor.h"
-
-#define POINTSYSTEM_CAPACITY 10
+//#include "editor_funcs.h"
 
 
 uint8_t init_editor(Editor *ed){
@@ -46,8 +45,6 @@ uint8_t add_pointsystem(Editor *ed, PointSystemType type)
     initialize_pointsystem(&ed->pointsystems[ed->pointsystem_count], type);
     ed->pointsystem_count++;
 }
-
-
 
 int count_pointsystem_type(Editor *ed, PointSystemType type)
 {
@@ -163,8 +160,15 @@ float distance_from_line(V2 pt, V2 pt1, V2 pt2)
     return num / den;
 }
 
-#define DEBUG_W_WIDTH 450
+void delete_pointsystem(Editor *ed, int id)
+{
+    for (int i = id; i < ed->pointsystem_count - 1; ++i){
+        ed->pointsystems[i] = ed->pointsystems[i + 1];
+    }
+    ed->pointsystem_count--;
+}
 
+#define DEBUG_W_WIDTH 450
 void draw_debug(Editor *ed)
 {
     DrawRectangle(W_WIDTH, 0, DEBUG_W_WIDTH, W_HEIGHT, BLACK);
@@ -192,6 +196,13 @@ void draw_debug(Editor *ed)
     DrawText(dbgmsg, W_WIDTH + 5, 5 * font_size + 5, font_size, color);
 }
 
+void reset_editor_state(Editor *ed)
+{
+    ed->state = EDITOR_STATE_NONE;
+    ed->pointsystem_id = -1;
+    ed->point_id = -1;
+    ed->state_ready = 0;
+}
 
 int main(int argc, char *argv[])
 {
@@ -200,18 +211,14 @@ int main(int argc, char *argv[])
     
     eCanvas canvas;
     eInitializeCanvas(&canvas, W_WIDTH, W_HEIGHT, 0x0);
-
-
+    
     Image img = (Image) { canvas.pixels, W_WIDTH, W_HEIGHT, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
     Texture2D tex = LoadTextureFromImage(img);
-
+    
     Editor ed;
     init_editor(&ed);
 
     V2 mouse;
-    V2 true_mouse;
-
-    char dbgmsg[64];
 
     while(!WindowShouldClose()){
         BeginDrawing();
@@ -220,29 +227,22 @@ int main(int argc, char *argv[])
         mouse = get_mouse_xy();
 
 
-        if (ed.state != EDITOR_STATE_NONE && !IsMouseButtonDown(0))
-        {
-            ed.state = EDITOR_STATE_NONE;
-            ed.pointsystem_id = -1;
-            ed.point_id = -1;
-            ed.state_ready = 0;
-        }
+        if (ed.state != EDITOR_STATE_NONE && !IsMouseButtonDown(0)) reset_editor_state(&ed);
 
-
-//        ed.hovered = 0;
-//        ed.point_id = -1;
         for (int i = 0; i < ed.pointsystem_count; ++i){
+            /*
+             * MOVE POINT IN POINTSYSTEM
+             */
             for (int pid = 0; pid < ed.pointsystems[i].movable_points; ++pid)
             {
                 if (is_points_near(ed.pointsystems[i].points[pid], mouse, 10) && ed.state == EDITOR_STATE_NONE)
                 {
-                    //ed.hovered = 1; // Probably useless
                     draw_pt_crosshair(&canvas, ed.pointsystems[i].points[pid]);
+                    
                     if (IsMouseButtonPressed(0))
                     {
-                    ed.point_id = pid;
-                        ed.pointsystem_id = i;
                         ed.point_id = pid;
+                        ed.pointsystem_id = i;
                         ed.state = EDITOR_STATE_MOVE_POINT;
                     }
                 }
@@ -253,19 +253,38 @@ int main(int argc, char *argv[])
              * MOVE WHOLE POINTSYSTEM HANDLING
              */
             uint32_t color = 0xFF00A000;
-            if (ed.pointsystems[i].type == WALL && ed.point_id < 0 && ed.state == EDITOR_STATE_NONE) 
+            //if (ed.pointsystems[i].type == WALL && ed.point_id < 0 && ed.state == EDITOR_STATE_NONE) 
+            if (ed.point_id < 0 && ed.state == EDITOR_STATE_NONE) 
             {
                 PointSystem *ps = &ed.pointsystems[i];
-                float distance = distance_from_line(mouse, ps->points[0], ps->points[1]); 
-                color = distance < 5 ? 0xFF90A090 : 0xFF00A000;
-                if (IsMouseButtonPressed(0) && distance < 5){
-                    ed.state = EDITOR_STATE_MOVE_WALL;
-                    ed.pointsystem_id = i;
-                } if (IsMouseButtonPressed(1) && distance < 5){
-                    for (int j = i; j < ed.pointsystem_count - 1; ++j){
-                        ed.pointsystems[j] = ed.pointsystems[j + 1];
-                    }
-                        ed.pointsystem_count--;
+                switch (ps->type){
+                    
+                    case WALL:
+                        float distance = distance_from_line(mouse, ps->points[0], ps->points[1]);
+                        V2 min = V2_min(ps->points[0], ps->points[1]);
+                        V2 max = V2_max(ps->points[0], ps->points[1]);
+
+                        float min_x = ps->points[0].x < ps->points[1].x ? ps->points[0].x : ps->points[1].x;
+                        float min_y = ps->points[0].y < ps->points[1].y ? ps->points[0].y : ps->points[1].y;
+                        float max_x = ps->points[0].x > ps->points[1].x ? ps->points[0].x : ps->points[1].x;
+                        float max_y = ps->points[0].y > ps->points[1].y ? ps->points[0].y : ps->points[1].y;
+
+                        int close = (distance < 5 &&
+                                     mouse.x > min_x && mouse.x < max_x &&
+                                     mouse.y > min_y && mouse.y < max_y);
+/*
+                        int close = (distance < 5 &&
+                                     mouse.x > min.x && mouse.x < max.x &&
+                                     mouse.y > min.x && mouse.y < max.y);
+                       */ 
+                        color = close ? 0xFF90A090 : 0xFF00A000;
+                        if (IsMouseButtonPressed(0) && close){
+                            ed.state = EDITOR_STATE_MOVE_WALL;
+                            ed.pointsystem_id = i;
+                        } if (IsMouseButtonPressed(1) && close){
+                            delete_pointsystem(&ed, i);
+                        }
+                        break;
                 }
             }
             display_pointsystem(&canvas, &ed.pointsystems[i], color);
@@ -288,31 +307,14 @@ int main(int argc, char *argv[])
         switch (ed.state){
             case EDITOR_STATE_MOVE_POINT:
                 V2 *pt = &ed.pointsystems[ed.pointsystem_id].points[ed.point_id];
-                //ed.pointsystems[ed.pointsystem_id].points[ed.point_id] = mouse;
+                
                 *pt = mouse;
                 update_pointsystem(&ed.pointsystems[ed.pointsystem_id]);
                 draw_pt_crosshair(&canvas, *pt);
                 break;
             case EDITOR_STATE_MOVE_WALL:
-
                 PointSystem *ps = &ed.pointsystems[ed.pointsystem_id];
-
-                float angle = ps->angle - HALFPI;
-                float length = V2_distance(ps->points[0], ps->points[1]);
-                
-                if (!ed.state_ready){
-                   ed.offset = (V2) { ps->points[0].x - mouse.x, ps->points[0].y - mouse.y };  
-                   ed.state_ready = 1;
-                }
-                V2 np = {
-                      mouse.x + ed.offset.x + length * cos(angle),
-                      mouse.y + ed.offset.y + length * sin(angle)
-                }; 
-
-                ps->points[0] = V2_add(mouse, ed.offset);
-                ps->points[1] = np;
-
-                update_pointsystem(ps);
+                move_wall(ps, mouse, &ed.state_ready);
                 break;
         }
 

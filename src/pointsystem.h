@@ -20,6 +20,7 @@ typedef struct PointSystem {
     int point_amount;          
     int movable_points;        
     V2 *points;
+    V2 offset;
 } PointSystem; 
 
 uint8_t initialize_pointsystem(PointSystem *ps, PointSystemType type);
@@ -31,6 +32,7 @@ void display_arrow(eCanvas *canvas, PointSystem *ps, uint32_t color);
 
 void update_wall(PointSystem *ps);
 void display_wall(eCanvas *canvas, PointSystem *ps, uint32_t color);
+void move_wall(PointSystem *ps, V2 mouse, int *state_ready);
 
 #endif // EPHO_POINTSYSTEM_H
 

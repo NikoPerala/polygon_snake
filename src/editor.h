@@ -4,6 +4,9 @@
 #include "egfx.h"
 #include "pointsystem.h"
 
+#define POINTSYSTEM_CAPACITY 10
+
+
 #define EDITOR_STATE_LIST       \
     X(EDITOR_STATE_NONE)        \
     X(EDITOR_STATE_MOVE_POINT)  \
@@ -20,6 +23,7 @@ typedef enum EDITOR_STATE_ENUM {
 const char *EditorStateNames[] = {
     EDITOR_STATE_LIST
 };
+#undef X
 
 typedef struct Editor {
     EditorState state;
@@ -38,6 +42,9 @@ typedef struct Editor {
 uint8_t init_editor(Editor *ed);
 void free_editor(Editor *ed); 
 int double_pointsystem_capacity(Editor *ed);
+void delete_pointsystem(Editor *ed, int id);
+void reset_editor_state(Editor *ed);
+
 int write_level(Editor *ed, char *name);
 
 int is_points_near(V2 pt1, V2 pt2, int tolerance);

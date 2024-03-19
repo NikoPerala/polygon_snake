@@ -66,3 +66,23 @@ V2 V2_from_polar(V2 pt, int r, float angle)
 
     return ret;
 }
+
+V2 V2_min(V2 a, V2 b)
+{
+    V2 ret = {
+        a.x < b.x ? a.x : b.x,
+        a.y < b.y ? a.y : b.y
+    };
+
+    return ret;
+}
+
+V2 V2_max(V2 a, V2 b)
+{
+    V2 ret = {
+        a.x > b.x ? a.x : b.x,
+        a.y > b.y ? a.y : b.y
+    };
+
+    return ret;
+}

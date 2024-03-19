@@ -16,6 +16,9 @@ float V2_dot_product(V2 a, V2 b);
 
 V2 V2_sub(V2 a, V2 b);
 V2 V2_add(V2 a, V2 b);
+V2 V2_min(V2 a, V2 b);
+V2 V2_max(V2 a, V2 b);
+
 
 V2 V2_from_polar(V2 pt, int r, float angle);
 V2 V2_delta_vector(V2 pt1, V2 pt2);
